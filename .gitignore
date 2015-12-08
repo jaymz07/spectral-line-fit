@@ -1,0 +1,4 @@
+#Do not track .par HITRAN database files. They are too large.
+*.par
+#Do not track compiled python objects
+*.pyc
