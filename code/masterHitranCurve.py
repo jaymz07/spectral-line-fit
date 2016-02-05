@@ -15,6 +15,7 @@ temperature, pressure = None, None  #Specify default value here. Will prompt use
 names = []
 isos = []
 isoNames = []
+concGuess = []
 
 lineExtension = 100.0
 
@@ -44,10 +45,14 @@ for i in range(0,len(sys.argv)):
         else:
             print("Molecule names must be specified first in command line arguements!!")
             sys.exit()
+    if( ( str.lower(sys.argv[i]) == '-c' or str.lower(sys.argv[i]) == '--concentrations' ) and i < len(sys.argv) - 1):
+        inSplit = str.split(sys.argv[i+1],',')
+        for conc in inSplit:
+            concGuess.append(float(conc))
     if( ( str.lower(sys.argv[i]) == '--temperature' ) and i < len(sys.argv) - 1):
         temperature = float(sys.argv[i+1])
     if( ( str.lower(sys.argv[i]) == '--pressure' ) and i < len(sys.argv) - 1):
-        temperature = float(sys.argv[i+1])
+        pressure = float(sys.argv[i+1])
     if( ( str.lower(sys.argv[i]) == '-x' or str.lower(sys.argv[i]) == '--x-range' ) and i < len(sys.argv) - 1):
         xrangeIn = sys.argv[i+1].split(',')
         if(len(xrangeIn) ==2):
@@ -127,17 +132,18 @@ for i in range(0,len(names)):
                         inputHitranFiles[i]]
     call(extractCommand)
     
-##Get guesses for concentrations, temperature, pressure
-concGuess = []
-defaultVal = 0.002
-print("\n\n--------------------------------------\n")
-for name in isoNames:
-    try:
-        val = float(raw_input("Enter concentration (1E-6 == ppmV) for " + name  + ": "))
-    except ValueError:
-        print("Using default of " + str(defaultVal))
-        val = defaultVal
-    concGuess.append(val)
+##Get values for concentrations, temperature, pressure
+if(len(concGuess) != len(names)):
+    concGuess = []
+    defaultVal = 0.002
+    print("\n\n--------------------------------------\n")
+    for name in isoNames:
+        try:
+            val = float(raw_input("Enter concentration (1E-6 == ppmV) for " + name  + ": "))
+        except ValueError:
+            print("Using default of " + str(defaultVal))
+            val = defaultVal
+        concGuess.append(val)
 pressDefault, tempDefault = 1013.2, 296.0
 while pressure == None:
     
