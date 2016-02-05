@@ -227,10 +227,16 @@ def computeAbsorption(pressure, temperature, gasSpecies, concValues, Line_Data, 
     
 
 vGrid, absCoeffTotal = computeAbsorption(pressure, temperature, gasSpecies, concGuess, lD, mD)
+speciesGraphs = []
+
+for i in range(0,len(gasSpecies)):
+    xi, yi = computeAbsorption(pressure, temperature, [gasSpecies[i]], [concGuess[i]], [lD[i]], [mD[i]])
+    plt.plot(xi,yi,label=gasSpecies[i])
+    speciesGraphs.append({'x' : xi, 'y' : yi, 'species' : gasSpecies[i], 'interpFunc' : interp1d(xi,yi)})
 
 ##Plot using matplotlib
 
-plt.plot(vGrid,absCoeffTotal,label = "HITRAN")
+plt.plot(vGrid,absCoeffTotal,label = "Total Absorption")
 
 plt.xlabel("Wavenumber(cm^-1)")
 plt.ylabel("Absorption Coef (cm^-1)")

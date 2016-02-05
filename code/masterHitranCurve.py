@@ -49,9 +49,9 @@ for i in range(0,len(sys.argv)):
         inSplit = str.split(sys.argv[i+1],',')
         for conc in inSplit:
             concGuess.append(float(conc))
-    if( ( str.lower(sys.argv[i]) == '--temperature' ) and i < len(sys.argv) - 1):
+    if( (str.lower(sys.argv[i]) == '-t' or str.lower(sys.argv[i]) == '--temperature' ) and i < len(sys.argv) - 1):
         temperature = float(sys.argv[i+1])
-    if( ( str.lower(sys.argv[i]) == '--pressure' ) and i < len(sys.argv) - 1):
+    if( (str.lower(sys.argv[i]) == '-p' or str.lower(sys.argv[i]) == '--pressure' ) and i < len(sys.argv) - 1):
         pressure = float(sys.argv[i+1])
     if( ( str.lower(sys.argv[i]) == '-x' or str.lower(sys.argv[i]) == '--x-range' ) and i < len(sys.argv) - 1):
         xrangeIn = sys.argv[i+1].split(',')
@@ -64,13 +64,13 @@ for i in range(0,len(sys.argv)):
         
         
     if(str.lower(sys.argv[i]) == '--help'):
-        print('\n-----------------------------------\n\nWrapper script for easy fitting of spectral data using the optimizeConc.py script\n')
-        print('Optional parameters:\n')
+        print('\n-----------------------------------\n\nWrapper script for easy computation of HITRAN absorption simulation using generateHitranCurve.py script\n')
+        print('Optional parameters (if not specified, they will be prompted):\n')
         print('-m,--molecules\t\t[Molecules]\t\tComma separated list of molecule names (H2O,CO2,...)')
         print('-is,--isotopologues\t[Isotopologues]\t\tComma separated list of Isotopologue codes (Ex. for CO2: 626,636). Zero for all species')
         print('-c,--concentrations\t[Concentrations]\tComma separated list of concentration values (1E-6,2E-5 for 1 ppmV and 10ppmV respectively)')
-        print('--temperature\t\t[Temperature]\t\tTemperature value or initial guess')
-        print('--pressure\t\t[Pressure]\t\tPressure value or initial guess')
+        print('-t,--temperature\t[Temperature]\t\tTemperature value or initial guess')
+        print('-p,--pressure\t\t[Pressure]\t\tPressure value or initial guess')
         print('-x,--x-range\t\t[X Range]\t\tLower bound, upper x bound')
         print('\n------------------------------------------------------\n\n')
         sys.exit()
