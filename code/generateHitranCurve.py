@@ -24,7 +24,7 @@ from cgsUnits import unitConversion
 from molecules import molecules
 molecNames   = molecules.keys()
 
-
+'''
 #Test Arguments:
 arguments = ['--line-files',
  '../tempFiles/H2O-161,../tempFiles/CO2-626',
@@ -40,10 +40,8 @@ arguments = ['--line-files',
  '1598,1605',
  '--isotopes',
  '161,626']
- 
- 
 sys.argv.extend(arguments)
-
+'''
 
 useErrorValue = False
 
@@ -103,7 +101,7 @@ else:
             print("X range:")
             print(xrangeIn)
             if(len(xrangeIn) ==2):
-                xLimits = Interval(float(xrangeIn[0])-wnCalculationExtension, float(xrangeIn[1])+wnCalculationExtension)
+                xLimits = Interval(1.0E7/float(xrangeIn[0])-wnCalculationExtension, 1.0E7/float(xrangeIn[1])+wnCalculationExtension)
             else:
                 print("Invalid x range")
                 sys.exit(1)
@@ -228,13 +226,13 @@ def computeAbsorption(pressure, temperature, gasSpecies, concValues, Line_Data, 
     return vGrid, absCoeff[:,0]
     
 
-vGrid, absCoeff = computeAbsorption(pressure, temperature, gasSpecies, concGuess, lD, mD)
+vGrid, absCoeffTotal = computeAbsorption(pressure, temperature, gasSpecies, concGuess, lD, mD)
 
 ##Plot using matplotlib
 
-plt.plot(vGrid,absCoeff,label = "HITRAN")
+plt.plot(vGrid,absCoeffTotal,label = "HITRAN")
 
-plt.xlabel("Wavelength(nm)")
+plt.xlabel("Wavenumber(cm^-1)")
 plt.ylabel("Absorption Coef (cm^-1)")
 plt.legend()
 

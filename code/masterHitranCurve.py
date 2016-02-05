@@ -68,6 +68,7 @@ for i in range(0,len(sys.argv)):
         print('Optional parameters:\n')
         print('-m,--molecules\t\t[Molecules]\t\tComma separated list of molecule names (H2O,CO2,...)')
         print('-is,--isotopologues\t[Isotopologues]\t\tComma separated list of Isotopologue codes (Ex. for CO2: 626,636). Zero for all species')
+        print('-c,--concentrations\t[Concentrations]\tComma separated list of concentration values (1E-6,2E-5 for 1 ppmV and 10ppmV respectively)')
         print('--temperature\t\t[Temperature]\t\tTemperature value or initial guess')
         print('--pressure\t\t[Pressure]\t\tPressure value or initial guess')
         print('-x,--x-range\t\t[X Range]\t\tLower bound, upper x bound')
@@ -128,7 +129,9 @@ for i in range(0,len(names)):
                         '-m',
                         str(names[i]),
                         '-x',
-                        str(1.0E7/float(maxX)) + ',' + str(10.0E7/float(minX)),
+                        str(minX) + ',' + str(maxX),
+                        '-X',
+                        'nm',
                         inputHitranFiles[i]]
     call(extractCommand)
     
