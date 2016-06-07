@@ -23,6 +23,8 @@ minX, maxX = None, None
 
 ###-----------------Scan command line arguments--------------------------------------
 for i in range(0,len(sys.argv)):
+    if(not isinstance(sys.argv[i],str)):
+        continue
     if( ( str.lower(sys.argv[i]) == '-m' or str.lower(sys.argv[i]) == '--molecules' ) and i < len(sys.argv) - 1):
         inSplit = str.split(sys.argv[i+1], ',')
         for mol in inSplit:
@@ -105,8 +107,8 @@ if(len(names) == 0 and len(isos) ==0 ):  #prompt for molecule name and isotopolo
         else:
             doneInputting = True
 if(minX == None or maxX == None):
-    minX = raw_input("Enter minimum x range: ")
-    maxX = raw_input("Enter maximum x range: ")
+    minX = raw_input("Enter minimum nm range: ")
+    maxX = raw_input("Enter maximum nm range: ")
 
 ###--------------Make sure the correct HITRAN database files are read------------------
 def get_hitran_name(moleculeName):
@@ -167,7 +169,7 @@ pressure = float(pressure) * 1000
 temperature = float(temperature)
 
 ##Run curve fitting script -- optimizeConc.py
-print('\n\n---------------------------------------------\nFitting data to line parameters....\n')
+print('\n\n---------------------------------------------\nGenerating plots of abosrption wavelength dependence....\n')
 
 def argString(listIn):
     outString = ''

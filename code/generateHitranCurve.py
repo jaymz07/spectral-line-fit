@@ -24,22 +24,25 @@ from cgsUnits import unitConversion
 from molecules import molecules
 molecNames   = molecules.keys()
 
-'''
+outputDir = 'output/'
+
+
 #Test Arguments:
+'''
 arguments = ['--line-files',
- '../tempFiles/H2O-161,../tempFiles/CO2-626',
+ '../tempFiles/CO2,../tempFiles/H2O',
  '--species-labels',
- 'H2O-161,CO2-626',
+ 'CO2,H2O',
  '--conc',
- '0.007,0.0003',
+ '0.0004,0.007',
  '-p',
- '1013500.0',
+ '1012300.0',
  '-t',
  '296.0',
  '--x-range',
- '1598,1605',
+ '1595.0,1615.0',
  '--isotopes',
- '161,626']
+ '0,0']
 sys.argv.extend(arguments)
 '''
 
@@ -222,25 +225,40 @@ def computeAbsorption(pressure, temperature, gasSpecies, concValues, Line_Data, 
         
     # compute absorption coefficients, also return uniform, equiidistant wavenumber grid corresponding to most dense cross section
     
-    vGrid, absCoeff = sum_xsTimesDensity (xsMatrix, atmos.densities, interpolate=interpolate, verbose=verbose)
-    return vGrid, absCoeff[:,0]
+    xOut, absCoeffOut = sum_xsTimesDensity (xsMatrix, atmos.densities, interpolate=interpolate, verbose=verbose)
+    return xOut, absCoeffOut[:,0]
     
-
+##Plot using matplotlib
 vGrid, absCoeffTotal = computeAbsorption(pressure, temperature, gasSpecies, concGuess, lD, mD)
 speciesGraphs = []
 
 for i in range(0,len(gasSpecies)):
     xi, yi = computeAbsorption(pressure, temperature, [gasSpecies[i]], [concGuess[i]], [lD[i]], [mD[i]])
-    plt.plot(xi,yi,label=gasSpecies[i])
+    plt.plot(1.0E7/xi,yi,label=gasSpecies[i])
     speciesGraphs.append({'x' : xi, 'y' : yi, 'species' : gasSpecies[i], 'interpFunc' : interp1d(xi,yi)})
 
-##Plot using matplotlib
+plt.plot(1.0E7/vGrid,absCoeffTotal,label = "Total Absorption")
 
-plt.plot(vGrid,absCoeffTotal,label = "Total Absorption")
-
-plt.xlabel("Wavenumber(cm^-1)")
+plt.xlabel("Wavelength(nm)")
 plt.ylabel("Absorption Coef (cm^-1)")
 plt.legend()
+
+##File Output
+def fileNameOut():
+    speciesString = ''
+    concString = ''
+    for i in range(0,len(gasSpecies)-1):
+        speciesString = speciesString + str(gasSpecies[i])+'_'
+        concString = concString + str(concGuess[i])+'-'
+    speciesString = speciesString + str(gasSpecies[-1])
+    concString = concString + str(concGuess[-1])
+    return speciesString+'_Temp--'+str(temperature)+"_Pres--"+str(pressure)+'_Conc--'+concString
+
+fileOut = open(outputDir+fileNameOut()+".csv",'w')
+fileOut.write("#"+fileNameOut() + "\n#wavelength\tAbsorption Coefficient\n")
+for i in range(0,len(vGrid)):
+    fileOut.write(str(1.0E7/vGrid[i]) + "\t" + str(absCoeffTotal[i])+'\n')
+fileOut.close()
 
 ##Show Final Plot (blocking statement, therfore it is last)
 plt.show()
